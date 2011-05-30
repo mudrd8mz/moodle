@@ -30,6 +30,10 @@ defined('MOODLE_INTERNAL') || die();
  * Scorm conversion handler
  */
 class moodle1_mod_scorm_handler extends moodle1_mod_handler {
+    /** @var array in-memory cache for the course module information for the current workshop  */
+    protected $currentcminfo = null;
+    /** @var moodle1_file_manager instance for the current scorm */
+    protected $fileman = null;
 
     /**
      * Declare the paths in moodle.xml we are able to convert
@@ -79,10 +83,10 @@ class moodle1_mod_scorm_handler extends moodle1_mod_handler {
     public function process_scorm($data) {
         global $CFG;
         // get the course module id and context id
-        $instanceid = $data['id'];
-        $cminfo     = $this->get_cminfo($instanceid);
-        $moduleid   = $cminfo['id'];
-        $contextid  = $this->converter->get_contextid(CONTEXT_MODULE, $moduleid);
+        $instanceid             = $data['id'];
+        $this->currentcminfo    = $this->get_cminfo($instanceid);
+        $moduleid               = $this->currentcminfo['id'];
+        $contextid              = $this->converter->get_contextid(CONTEXT_MODULE, $moduleid);
 
         // conditionally migrate to html format in intro
         if ($CFG->texteditors !== 'textarea' && $data['introformat'] == FORMAT_MOODLE ) {
@@ -109,7 +113,18 @@ class moodle1_mod_scorm_handler extends moodle1_mod_handler {
                 $data['scormtype'] = 'localtype';
             }
         }
-        // @todo upgrade to new file storage? re: $data['reference'] file
+        //upgrade to new file storage re: $data['reference'] file
+        $this->fileman = $this->converter->get_file_manager($contextid, 'mod_scorm', 'package' );
+        $fileid = $this->fileman->migrate_file('course_files/'.$data['reference']);
+
+        // write inforef.xml for scorm zip file.
+        $this->open_xml_writer("activities/scorm_{$moduleid}/inforef.xml");
+        $this->xmlwriter->begin_tag('inforef');
+        $this->xmlwriter->begin_tag('fileref');
+        $this->write_xml('file', array('id' => $fileid));
+        $this->xmlwriter->end_tag('fileref');
+        $this->xmlwriter->end_tag('inforef');
+        $this->close_xml_writer();
 
         // we now have all information needed to start writing into the file
         $this->open_xml_writer("activities/scorm_{$moduleid}/scorm.xml");
