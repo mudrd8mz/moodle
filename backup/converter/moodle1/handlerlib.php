@@ -1806,8 +1806,16 @@ abstract class moodle1_qtype_handler extends moodle1_plugin_handler {
      */
     protected function write_dataset_definitions(array $datasetdefinitions) {
 
-        $this->xmlwriter->begin_tag('dataset_definitions');
+        // populate a new array of dataset definitions, making sure that we write
+        // just one definition for each category+name+type
+        $uniqdatasetdefinitions = array();
         foreach ($datasetdefinitions as $datasetdefinition) {
+            $definitionidentifier = '/'.$datasetdefinition['category'].'/'.$datasetdefinition['name'].'/'.$datasetdefinition['type'];
+            $uniqdatasetdefinitions[$definitionidentifier] = $datasetdefinition;
+        }
+
+        $this->xmlwriter->begin_tag('dataset_definitions');
+        foreach ($uniqdatasetdefinitions as $datasetdefinition) {
             $this->xmlwriter->begin_tag('dataset_definition', array('id' => $this->converter->get_nextid()));
             foreach (array('category', 'name', 'type', 'options', 'itemcount') as $element) {
                 $this->xmlwriter->full_tag($element, $datasetdefinition[$element]);
