@@ -1108,10 +1108,11 @@ class grade_structure {
      * @param bool  $withlink Whether or not this header has a link
      * @param bool  $icon Whether or not to display an icon with this header
      * @param bool  $spacerifnone return spacer if no icon found
+     * @param int|null  $userid id of user for whom the report is built (null if this is a header for all users)
      *
      * @return string header
      */
-    public function get_element_header(&$element, $withlink=false, $icon=true, $spacerifnone=false) {
+    public function get_element_header(&$element, $withlink=false, $icon=true, $spacerifnone=false, $userid=null) {
         $header = '';
 
         if ($icon) {
@@ -1126,7 +1127,7 @@ class grade_structure {
         }
 
         if ($withlink) {
-            $url = $this->get_activity_link($element);
+            $url = $this->get_activity_link($element, $userid);
             if ($url) {
                 $a = new stdClass();
                 $a->name = get_string('modulename', $element['object']->itemmodule);
@@ -1139,7 +1140,7 @@ class grade_structure {
         return $header;
     }
 
-    private function get_activity_link($element) {
+    private function get_activity_link($element, $userid = null) {
         global $CFG;
 
         $itemtype = $element['object']->itemtype;
@@ -1166,10 +1167,14 @@ class grade_structure {
 
         // If module has grade.php, link to that, otherwise view.php
         $dir = $CFG->dirroot . '/mod/' . $itemmodule;
+        $urlparams = array('id' => $cm->id);
+        if ($userid) {
+            $urlparams['userid'] = $userid;
+        }
         if (file_exists($dir.'/grade.php')) {
-            return new moodle_url('/mod/' . $itemmodule . '/grade.php', array('id' => $cm->id));
+            return new moodle_url('/mod/' . $itemmodule . '/grade.php', $urlparams);
         } else {
-            return new moodle_url('/mod/' . $itemmodule . '/view.php', array('id' => $cm->id));
+            return new moodle_url('/mod/' . $itemmodule . '/view.php', $urlparams);
         }
     }
 
