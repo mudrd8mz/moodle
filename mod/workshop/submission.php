@@ -29,6 +29,7 @@ require_once(dirname(__FILE__).'/locallib.php');
 
 $cmid   = required_param('cmid', PARAM_INT);            // course module id
 $id     = optional_param('id', 0, PARAM_INT);           // submission id
+$userid = optional_param('userid', 0, PARAM_INT);       // user id (if submission id is not specified)
 $edit   = optional_param('edit', false, PARAM_BOOL);    // open for editing?
 $assess = optional_param('assess', false, PARAM_BOOL);  // instant assessment required
 
@@ -54,10 +55,13 @@ if ($id) { // submission is specified
     $workshop->log('view submission', $workshop->submission_url($submission->id), $submission->id);
 
 } else { // no submission specified
-    if (!$submission = $workshop->get_submission_by_author($USER->id)) {
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    if (!$submission = $workshop->get_submission_by_author($userid)) {
         $submission = new stdclass();
         $submission->id = null;
-        $submission->authorid = $USER->id;
+        $submission->authorid = $userid;
         $submission->example = 0;
         $submission->grade = null;
         $submission->gradeover = null;
@@ -80,10 +84,11 @@ $ispublished    = ($workshop->phase == workshop::PHASE_CLOSED
                     and $submission->published == 1
                     and has_capability('mod/workshop:viewpublishedsubmissions', $workshop->context));
 
-if (empty($submission->id) and !$workshop->creating_submission_allowed($USER->id)) {
+if ($USER->id != $submission->authorid) {
     $editable = false;
-}
-if ($submission->id and !$workshop->modifying_submission_allowed($USER->id)) {
+} else if (empty($submission->id) and !$workshop->creating_submission_allowed($USER->id)) {
+    $editable = false;
+} else if ($submission->id and !$workshop->modifying_submission_allowed($USER->id)) {
     $editable = false;
 }
 
@@ -104,11 +109,13 @@ $seenaspublished = false; // is the submission seen as a published submission?
 
 if ($submission->id and ($ownsubmission or $canviewall or $isreviewer)) {
     // ok you can go
-} elseif ($submission->id and $ispublished) {
+} else if ($submission->id and $ispublished) {
     // ok you can go
     $seenaspublished = true;
-} elseif (is_null($submission->id) and $cansubmit) {
+} else if (is_null($submission->id) and $editable) {
     // ok you can go
+} else if ($canviewall) {
+    // you can view all submission but this user has not submitted anything yet
 } else {
     print_error('nopermissions', 'error', $workshop->view_url(), 'view or create submission');
 }
@@ -264,7 +271,11 @@ if ($submission->id) {
     }
     echo $output->render($workshop->prepare_submission($submission, $showauthor));
 } else {
-    echo $output->box(get_string('noyoursubmission', 'workshop'));
+    if ($ownsubmission) {
+        echo $output->box(get_string('noyoursubmission', 'workshop'));
+    } else {
+        echo $output->box(get_string('nosubmissionfound', 'workshop')); // TODO print author name
+    }
 }
 
 if ($editable) {
