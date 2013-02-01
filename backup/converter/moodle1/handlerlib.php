@@ -481,6 +481,14 @@ class moodle1_root_handler extends moodle1_xml_handler {
         $this->close_xml_writer();
 
         ////////////////////////////////////////////////////////////////////////
+        // write course.xml
+        ////////////////////////////////////////////////////////////////////////
+        $this->open_xml_writer('course/course.xml');
+        $course = $this->converter->get_stash('course_header');
+        $this->write_xml('course', $course, array('/course/id', '/course/contextid'));
+        $this->close_xml_writer();
+
+        ////////////////////////////////////////////////////////////////////////
         // write files.xml
         ////////////////////////////////////////////////////////////////////////
         $this->open_xml_writer('files.xml');
@@ -756,10 +764,8 @@ class moodle1_course_header_handler extends moodle1_xml_handler {
         $this->course['summary'] = moodle1_converter::migrate_referenced_files($this->course['summary'], $fileman);
         $this->converter->set_stash('course_summary_files_ids', $fileman->get_fileids());
 
-        // write course.xml
-        $this->open_xml_writer('course/course.xml');
-        $this->write_xml('course', $this->course, array('/course/id', '/course/contextid'));
-        $this->close_xml_writer();
+        // stash the course header information
+        $this->converter->set_stash('course_header', $this->course);
     }
 }
 
