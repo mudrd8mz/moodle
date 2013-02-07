@@ -484,10 +484,38 @@ class moodle1_root_handler extends moodle1_xml_handler {
         ////////////////////////////////////////////////////////////////////////
         // write course.xml
         ////////////////////////////////////////////////////////////////////////
-        $this->open_xml_writer('course/course.xml');
         $course = $this->converter->get_stash('course_header');
+        $courseformatdata = $this->converter->get_stash_or_default('course_format_data');
+        if ($courseformatdata) {
+            foreach ($courseformatdata as $format => $data) {
+                if ($format and $data and isset($data['course']) and is_array($data['course'])) {
+                    // {@see backup_plugin::get_recommended_name()}
+                    $course['plugin_format_'.$format.'_course'] = $data['course'];
+                }
+            }
+        }
+        $this->open_xml_writer('course/course.xml');
         $this->write_xml('course', $course, array('/course/id', '/course/contextid'));
         $this->close_xml_writer();
+
+        ////////////////////////////////////////////////////////////////////////
+        // write sections/section_xxx/section.xml files
+        ////////////////////////////////////////////////////////////////////////
+        foreach ($this->converter->get_stash_itemids('sectioninfo') as $sectionid) {
+            $section = $this->converter->get_stash('sectioninfo', $sectionid);
+            $courseformatdata = $this->converter->get_stash_or_default('course_format_data');
+            if ($courseformatdata) {
+                foreach ($courseformatdata as $format => $data) {
+                    if ($format and $data and isset($data['sections'][$sectionid]) and is_array($data['sections'][$sectionid])) {
+                        // {@see backup_plugin::get_recommended_name()}
+                        $section['plugin_format_'.$format.'_section'] = $data['sections'][$sectionid];
+                    }
+                }
+            }
+            $this->open_xml_writer('sections/section_' . $sectionid . '/section.xml');
+            $this->write_xml('section', $section);
+            $this->close_xml_writer();
+        }
 
         ////////////////////////////////////////////////////////////////////////
         // write files.xml
@@ -889,7 +917,7 @@ class moodle1_course_outline_handler extends moodle1_xml_handler {
     }
 
     /**
-     * Writes sections/section_xxx/section.xml file and stashes it, too
+     * Prepares the contents of sections/section_xxx/section.xml file and stashes it
      */
     public function on_course_section_end() {
 
@@ -912,11 +940,8 @@ class moodle1_course_outline_handler extends moodle1_xml_handler {
         $this->xmlwriter->end_tag('inforef');
         $this->close_xml_writer();
 
-        // stash the section info and write section.xml
+        // stash the section info
         $this->converter->set_stash('sectioninfo', $this->currentsection, $this->currentsection['id']);
-        $this->open_xml_writer('sections/section_' . $this->currentsection['id'] . '/section.xml');
-        $this->write_xml('section', $this->currentsection);
-        $this->close_xml_writer();
         unset($this->currentsection);
     }
 
