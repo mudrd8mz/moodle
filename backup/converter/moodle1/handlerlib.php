@@ -50,6 +50,7 @@ abstract class moodle1_handlers_factory {
             new moodle1_course_header_handler($converter),
             new moodle1_course_outline_handler($converter),
             new moodle1_roles_definition_handler($converter),
+            new moodle1_course_format_handler($converter),
             new moodle1_question_bank_handler($converter),
             new moodle1_scales_handler($converter),
             new moodle1_outcomes_handler($converter),
@@ -752,7 +753,8 @@ class moodle1_course_header_handler extends moodle1_xml_handler {
             'original_course_fullname'  => $this->course['fullname'],
             'original_course_shortname' => $this->course['shortname'],
             'original_course_startdate' => $this->course['startdate'],
-            'original_course_contextid' => $contextid
+            'original_course_contextid' => $contextid,
+            'original_course_format'    => $this->course['format'],
         );
         $this->converter->set_stash('original_course_info', $info);
 
@@ -1019,6 +1021,161 @@ class moodle1_roles_definition_handler extends moodle1_xml_handler {
             $this->xmlwriter->end_tag('roles_definition');
         }
         $this->close_xml_writer();
+    }
+}
+
+
+/**
+ * Handles the conversion of the course format data eventually included  in the moodle.xml file
+ */
+class moodle1_course_format_handler extends moodle1_xml_handler {
+
+    /** @var array holds the instances of course format specific conversion handlers */
+    private $formathandlers = null;
+
+    /**
+     * Return the paths to be observed in the source moodle.xml file
+     *
+     * Course formats had a single location to store their data in moodle.xml. We
+     * register it here as a grouped element so that we can re-dispatch it to the
+     * course format plugin as a whole.
+     *
+     * @return array
+     */
+    public function get_paths() {
+
+        // Check if some installed course format wants to observe its subpaths inside the <FORMATDATA>
+        $subpaths = array();
+        foreach ($this->get_format_handler('*') as $formathandler) {
+            foreach ($formathandler->get_formatdata_subpaths() as $subpath) {
+                $subpaths[$subpath] = true;
+            }
+        }
+
+        $paths = array();
+
+        if ($subpaths) {
+            $paths = array(new convert_path('formatdata', '/MOODLE_BACKUP/COURSE/FORMATDATA', array(), true));
+            foreach (array_keys($subpaths) as $subpath) {
+                $name = 'formatdata_'.strtolower(str_replace('/', '_', $subpath));
+                $path = '/MOODLE_BACKUP/COURSE/FORMATDATA/'.$subpath;
+                $paths[] = new convert_path($name, $path);
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Re-dispatches the whole formatdata chunk to the course format plugin to be be converted.
+     *
+     * @param array $data
+     * @param array $raw
+     */
+    public function process_formatdata(array $data, array $raw) {
+
+        // Do we actually have any data we are interested in?
+        if (empty($data)) {
+            $this->log('no course format data to be converted', backup::LOG_DEBUG);
+            return;
+        }
+
+        // Get the format of the course being converted.
+        $format = $this->get_course_format_name();
+
+        // Check if the format ships with the converter.
+        $handler = $this->get_format_handler($format);
+
+        if (!$handler) {
+            $this->log('course format handler not found', backup::LOG_WARNING, $format);
+            return;
+        }
+
+        $converted = $handler->convert_formatdata($data);
+
+        if ($converted and is_array($converted)) {
+            $this->stash_converted_formatdata($format, $converted);
+        }
+    }
+
+    /**
+     * Provides access to plugin specific format handlers
+     *
+     * Returns either list of all format handler instances (if passed '*') or a particular handler
+     * for the given format or false if the format is not supported.
+     *
+     * @throws moodle1_convert_exception
+     * @param string $name the name of the course format or '*' for returning all
+     * @return array|moodle1_format_handler|bool
+     */
+    protected function get_format_handler($name) {
+
+        if (is_null($this->formathandlers)) {
+            // Initialize the list of format handler instances.
+            $this->formathandlers = array();
+            foreach (get_plugin_list('format') as $formatname => $formatlocation) {
+                $filename = $formatlocation.'/backup/moodle1/lib.php';
+                if (file_exists($filename)) {
+                    $classname = 'moodle1_format_'.$formatname.'_handler';
+                    require_once($filename);
+                    if (!class_exists($classname)) {
+                        throw new moodle1_convert_exception('missing_handler_class', $classname);
+                    }
+                    if (!in_array('moodle1_format_handler', class_parents($classname))) {
+                        throw new moodle1_convert_exception('format_handler_superclass');
+                    }
+                    $this->log('registering handler', backup::LOG_DEBUG, $classname, 2);
+                    $this->formathandlers[$formatname] = new $classname($this, $formatname);
+                }
+            }
+        }
+
+        if ($name === '*') {
+            return $this->formathandlers;
+
+        } else if (isset($this->formathandlers[$name])) {
+            return $this->formathandlers[$name];
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the name of the course format in the original moodle.xml file
+     *
+     * @return string
+     */
+    protected function get_course_format_name() {
+        $originalcourseinfo = $this->converter->get_stash('original_course_info');
+        return $originalcourseinfo['original_course_format'];
+    }
+
+    /**
+     * Stashes the converted course format data to be appended to course.xml
+     *
+     * @param string $format the name of the format
+     * @param array $data converted course format data structure
+     */
+    protected function stash_converted_formatdata($format, array $data) {
+
+        if (empty($data)) {
+            return;
+        }
+
+        $stash = array();
+
+        if (isset($data['course']) and is_array($data['course']) and !empty($data['course'])) {
+            $stash['course'] = $data['course'];
+        }
+
+        if (isset($data['sections']) and is_array($data['sections']) and !empty($data['sections'])) {
+            $stash['sections'] = $data['sections'];
+        }
+
+        if ($stash) {
+            $this->converter->set_stash('course_format_data', array($format => $stash));
+        }
     }
 }
 
@@ -2113,5 +2270,91 @@ abstract class moodle1_submod_handler extends moodle1_plugin_handler {
      */
     final public function get_paths() {
         return array();
+    }
+}
+
+/**
+ * Base class for all course format handlers
+ */
+abstract class moodle1_format_handler extends moodle1_plugin_handler {
+
+    /** @var moodle1_course_format_handler */
+    protected $parenthandler;
+
+    /**
+     * Returns the list of paths within one <FORMATDATA> that this format needs to have included
+     * in the grouped format data structure
+     *
+     * @return array of strings
+     */
+    abstract public function get_formatdata_subpaths();
+
+    /**
+     * Converts the contents of <FORMATDATA> structure into the moodle2 format.
+     *
+     * Returned structure must be an array with one or two items with keys 'course' or 'sections'.
+     * The 'sections' item, if returned, is another array of data using section id as the key.
+     *
+     * Example of returned structure:
+     * array(
+     *     'course' => array(
+     *         'displaymode' => 0,
+     *         'displayname' => 'Study planner',
+     *     ),
+     *     'sections' => array(
+     *         1 => array(
+     *             'section' => 1,
+     *             'hidenumber' => 1,
+     *             'offlinematerial' => 0,
+     *         ),
+     *         4 => array(
+     *             'section' => 4,
+     *             'hidenumber' => 1,
+     *             'offlinematerial' => 0,
+     *         ),
+     *     )
+     * )
+     *
+     * The 'course' structure is appended to the <course> element in course/course.xml file.
+     * Similarly, each structure in the 'sections' array is appended to the <section> element in
+     * the corresponding sections/section_xxx/section.xml file.
+     *
+     * @param array $data grouped contents of the <FORMATDATA> element in moodle.xml
+     * @return array converted data to be attached to <course> and <section> elements
+     */
+    abstract public function convert_formatdata(array $data);
+
+    /// implementation details follow //////////////////////////////////////////
+
+    /**
+     * Constructor (also known as "I love phpDoc like this").
+     *
+     * @param moodle1_course_format_handler $parenthandler the parent course format handler
+     * @param string $format the name of this course format plugin
+     */
+    public function __construct(moodle1_course_format_handler $parenthandler, $format) {
+        $this->parenthandler = $parenthandler;
+        parent::__construct($parenthandler->get_converter(), 'format', $format);
+    }
+
+    /**
+     * @see self::get_formatdata_subpaths()
+     */
+    final public function get_paths() {
+        throw new moodle1_convert_exception('format_handler_get_paths');
+    }
+
+    /**
+     * Format handlers are not supposed to open their xml_writer
+     */
+    final protected function open_xml_writer($filename) {
+        throw new moodle1_convert_exception('opening_xml_writer_forbidden');
+    }
+
+    /**
+     * Format handlers cannot close the xml_writer
+     */
+    final protected function close_xml_writer() {
+        throw new moodle1_convert_exception('opening_xml_writer_forbidden');
     }
 }
