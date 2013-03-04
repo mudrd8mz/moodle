@@ -57,19 +57,13 @@ $string['choosereadme'] = '
 		<p>This, and all other themes included in the Moodle core, are licensed under the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>.
 	</div>
 </div>';
-
 $string['tagline'] = 'Tagline';
 $string['taglinedesc'] = 'Set a tagline to appear under the site name on the front page.';
-
 $string['footerline'] = 'Footerline';
 $string['footerlinedesc'] = 'Add some text (copyright info, etc.) to the footer.';
-
 $string['backgroundcolor'] = 'Header background';
-$string['backgroundcolordesc'] = 'Change the background color of the header.';
-
-$string['linkcolor'] = 'Link color';
-$string['linkcolordesc'] = 'Set the color of links in the theme, use html hex code.';
-
-$string['linkhover'] = 'Menu hover color';
-$string['linkhoverdesc'] = 'Set the color of the menu on hover in the theme, use html hex code.';
-
+$string['backgroundcolordesc'] = 'Change the background colour of the header.';
+$string['linkcolor'] = 'Link colour';
+$string['linkcolordesc'] = 'Set the colour of links in the theme. Use html hex code.';
+$string['linkhover'] = 'Menu hover colour';
+$string['linkhoverdesc'] = 'Set the colour of the menu on hover in the theme. Use html hex code.';

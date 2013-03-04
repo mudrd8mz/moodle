@@ -61,9 +61,9 @@ $string['choosereadme'] = '
 $string['configtitle'] = 'Formal white theme';
 $string['creditstomoodleorg'] = 'Display credits to moodle.org';
 $string['creditstomoodleorgdesc'] = 'Display the usual small moodle logo at the bottom of the page';
-$string['ctmo_ineverypage'] = 'in every page'; // ctmo == credits to moodle org
-$string['ctmo_no'] = 'never'; // ctmo == credits to moodle org
-$string['ctmo_onfrontpageonly'] = 'in the front page only'; // ctmo == credits to moodle org
+$string['ctmo_ineverypage'] = 'in every page';
+$string['ctmo_no'] = 'never';
+$string['ctmo_onfrontpageonly'] = 'in the front page only';
 $string['customcss'] = 'Custom CSS';
 $string['customcssdesc'] = 'Any CSS you enter here will be added to every page allowing your to easily customise this theme.';
 $string['customlogourl'] = 'Custom logo';
@@ -88,6 +88,6 @@ $string['noframe'] = 'Formal white 1.9 look';
 $string['noframedesc'] = 'Select this option to require your moodle page to look like moodle 1.*, alias, without the surrounding frame.';
 $string['pluginname'] = 'Formal white';
 $string['rblockcolumnbgc'] = 'Right column background colour';
-$string['rblockcolumnbgcdesc'] = 'This sets the right column background colour for the theme. If you leave this empty the left column background color will be used.';
+$string['rblockcolumnbgcdesc'] = 'This sets the right column background colour for the theme. If you leave this empty the left column background colour will be used.';
 $string['region-side-post'] = 'Right';
 $string['region-side-pre'] = 'Left';
