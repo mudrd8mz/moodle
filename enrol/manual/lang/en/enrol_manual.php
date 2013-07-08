@@ -61,6 +61,7 @@ $string['status_desc'] = 'Allow course access of internally enrolled users. This
 $string['status_help'] = 'This setting determines whether users can be enrolled manually, via a link in the course administration settings, by a user with appropriate permissions such as a teacher.';
 $string['statusenabled'] = 'Enabled';
 $string['statusdisabled'] = 'Disabled';
+$string['switchbulkenrolment'] = 'Switch to bulk enrolment tool';
 $string['unenrol'] = 'Unenrol user';
 $string['unenrolselectedusers'] = 'Unenrol selected users';
 $string['unenrolselfconfirm'] = 'Do you really want to unenrol yourself from course "{$a}"?';

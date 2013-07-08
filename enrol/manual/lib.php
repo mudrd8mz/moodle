@@ -240,6 +240,7 @@ class enrol_manual_plugin extends enrol_plugin {
             'instances'           => $instances,
             'courseid'            => $instance->courseid,
             'ajaxurl'             => '/enrol/manual/ajax.php',
+            'bulkurl'             => $manuallink->out(false),
             'url'                 => $manager->get_moodlepage()->url->out(false),
             'optionsStartDate'    => $startdateoptions,
             'defaultRole'         => $instance->roleid,
@@ -273,6 +274,7 @@ class enrol_manual_plugin extends enrol_plugin {
             'recovergrades'), 'enrol');
         $button->strings_for_js('assignroles', 'role');
         $button->strings_for_js('startingfrom', 'moodle');
+        $button->strings_for_js('switchbulkenrolment', 'enrol_manual');
 
         return $button;
     }

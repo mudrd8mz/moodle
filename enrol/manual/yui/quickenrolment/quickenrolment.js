@@ -9,6 +9,7 @@ YUI.add('moodle-enrol_manual-quickenrolment', function(Y) {
         PARAMS : 'params',
         URL : 'url',
         AJAXURL : 'ajaxurl',
+        BULKURL : 'bulkurl',
         MULTIPLE : 'multiple',
         PAGE : 'page',
         COURSEID : 'courseid',
@@ -67,7 +68,8 @@ YUI.add('moodle-enrol_manual-quickenrolment', function(Y) {
         SEARCH : 'uep-search',
         SEARCHBTN : 'uep-search-btn',
         CLOSE : 'close',
-        CLOSEBTN : 'close-button'
+        CLOSEBTN : 'close-button',
+        BULKLINK : 'bulk-link'
     };
     var create = Y.Node.create;
 
@@ -119,6 +121,9 @@ YUI.add('moodle-enrol_manual-quickenrolment', function(Y) {
                         )
                         .append(create('<div class="'+CSS.CLOSEBTN+'"></div>')
                             .append(create('<input type="button" value="'+M.str.enrol.finishenrollingusers+'" />'))
+                        )
+                        .append(create('<div class="' + CSS.BULKLINK + '"></div>')
+                            .append(create('<a href="' + this.get(UEP.BULKURL) + '">' + M.str.enrol_manual.switchbulkenrolment + '</a>'))
                         )
                     )
                 )
@@ -452,6 +457,9 @@ YUI.add('moodle-enrol_manual-quickenrolment', function(Y) {
                 validator : Y.Lang.isString
             },
             ajaxurl : {
+                validator : Y.Lang.isString
+            },
+            bulkurl : {
                 validator : Y.Lang.isString
             },
             base : {
