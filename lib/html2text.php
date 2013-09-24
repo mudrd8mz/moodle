@@ -583,6 +583,8 @@ class html2text
             $this->_link_list[] = $url;
             $index = count($this->_link_list);
         }
+        else
+            $index++ ;
 
         return $display . ' [' . ($index) . ']';
     }
