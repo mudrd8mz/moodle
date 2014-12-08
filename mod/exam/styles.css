@@ -1,0 +1,218 @@
+
+.path-mod-exam .quizinfo {
+    text-align: center;
+}
+.path-mod-exam h3 {
+    font-size: 18px;
+    margin: 15px 0 10px;
+}
+
+.path-mod-exam strong { font-weight: bold; }
+.path-mod-exam em { font-style: italic; }
+.path-mod-exam ul { list-style-type: circle; }
+.path-mod-exam ol { list-style-type: decimal; }
+.path-mod-exam ol li { list-style-type: decimal; margin-left: 20px; }
+
+.path-mod-exam .button {
+    float: left;
+    width: auto;
+    padding: 5px 15px;
+    color: #fff;
+    background-color: #005aa8;
+    background-image: linear-gradient(to bottom, #0070a8, #0038a8);
+    /*border: 1px solid #fff;*/
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-decoration: none;
+	margin: 1px;
+	
+	/*background-color: #005aa8;
+    background-image: linear-gradient(to bottom, #0070a8, #0038a8);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);*/
+}
+/*.path-mod-exam .button:hover {
+    background-color:darkslategray;
+}*/
+
+.path-mod-exam .quizArea, .quizResults {
+    zoom: 1;
+}
+.path-mod-exam .quizArea:before, .quizArea:after, .quizResults:before, .quizResults:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    font-size: 0;
+}
+.path-mod-exam .quizArea:after, .quizResults:after {
+    clear: both;
+}
+
+.path-mod-exam .questionCount {
+    font-size: 14px;
+    font-style: italic;
+}
+.path-mod-exam .questionCount span {
+    font-weight: bold;
+}
+
+.path-mod-exam ol.questions {
+    margin-top: 20px;
+    margin-left: 0;
+}
+.path-mod-exam ol.questions li {
+    margin-left: 0;
+}
+
+.path-mod-exam ul.answers {
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+
+.path-mod-exam ul.responses li {
+    margin: 10px 20px 20px;
+}
+.path-mod-exam ul.responses li p span {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+.path-mod-exam ul.answers li.correct, ul.responses li.correct p span {
+    color: #6C9F2E;
+}
+.path-mod-exam ul.responses li.incorrect p span {
+    color: #B5121B;
+}
+
+.path-mod-exam .quizResults h3 {
+    margin: 0;
+}
+.path-mod-exam .quizResults h3 span {
+    font-weight: normal;
+    font-style: italic;
+}
+.path-mod-exam .quizResultsCopy {
+    clear: both;
+    margin-top: 20px;
+}
+
+
+/* BASE QUIZ STYLES */
+/* These styles ensure that the necessary elements are hidden for toggling */
+
+/* DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING!! */
+
+.path-mod-exam .startQuiz,
+.path-mod-exam .backToQuestion,
+.path-mod-exam .nextQuestion,
+.path-mod-exam .questions li.question,
+.path-mod-exam .questions li.question .responses,
+.path-mod-exam .questions li.question .responses .correct,
+.path-mod-exam .questions li.question .responses .incorrect,
+.path-mod-exam .quizResults {
+    display: none;
+}
+
+/* If response messages are disabled or only shown on quiz completion,
+   nextQuestion button IS checkAnswer button - so it must be displayed */
+.path-mod-exam .nextQuestion.checkAnswer {
+    display: block;
+}
+
+.path-mod-exam ol.questions,
+.path-mod-exam ul.answers,
+.path-mod-exam ul.responses,
+.path-mod-exam ol.questions li,
+.path-mod-exam ul.answers li,
+.path-mod-exam ul.responses li {
+    list-style-type: none;
+    clear: both;
+}
+
+/* Accessibility */
+.path-mod-exam .quizName span {
+    position: absolute;
+    top: -999px;
+}
+.path-mod-exam ul.answers li.wrong{
+    color: red;
+}
+
+
+
+.path-mod-exam .qnbutton {
+    display: block;
+    position: relative;
+    float: left;
+    width: 1.5em;
+    height: 1.5em;
+    overflow: hidden;
+    margin: 0.3em 0.3em 0.3em 0;
+    padding: 0;
+    border: 1px solid #bbb;
+    background: #fff;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5em !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.path-mod-exam .qnbutton.thispage {
+     border: 2px solid #666;
+}
+.path-mod-exam .navblock {
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 30px;
+    padding: 8px 4px;
+}
+.path-mod-exam .questions .unflagged {
+     padding: 0 10px;
+     background:#fff url([[pix:i/unflagged]]) no-repeat left center;
+     cursor: pointer;
+}
+.path-mod-exam .questions .flagged {
+     padding: 0 10px;
+     background:#fff url([[pix:i/flagged]]) no-repeat left center;
+     cursor: pointer;
+}
+.path-mod-exam span.questext{
+    font-weight: bold; 
+    font-size: 18px;
+    margin: 15px 0 10px;
+}
+.path-mod-exam div.quesname{
+    margin: 15px 0 10px;
+}
+.path-mod-exam .qnbutton.trafficlight {
+    background: url([[pix:exam|navflagged]]) no-repeat top right;
+}
+
+.path-mod-exam ul.responses li.correct{
+ background: #FCF8E3;
+ color: green;
+}
+.path-mod-exam ul.responses li.incorrect{
+  background: #FCF8E3;
+ color: red;
+}
+
+.page-mod-exam-view .qnbutton.notanswered, .page-mod-exam-view .qnbutton.incorrect{
+    background-color: #fcc;
+}
+.path-mod-exam .qnbutton.show.incorrect{
+    background-color: #fcc;
+}
+.path-mod-exam .qnbutton.show.correct{
+    background-color: #cfc;
+}
