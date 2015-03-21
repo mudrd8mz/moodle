@@ -252,10 +252,15 @@ if ($canoverridegrades or $cansetassessmentweight) {
     }
 }
 
+$workshop->delegate->assessment_page_init($PAGE, $assessment, $submission);
+
 // output starts here
 $output = $PAGE->get_renderer('mod_workshop');      // workshop renderer
 echo $output->header();
 echo $output->heading(format_string($workshop->name));
+
+$workshop->delegate->assessment_page_start($assessment, $submission);
+
 echo $output->heading(get_string('assessedsubmission', 'workshop'), 3);
 
 $submission = $workshop->get_submission_by_id($submission->id);     // reload so can be passed to the renderer
@@ -299,5 +304,7 @@ if ($isreviewer) {
 if (!$assessmenteditable and $canoverridegrades) {
     $feedbackform->display();
 }
+
+$workshop->delegate->assessment_page_end($assessment, $submission);
 
 echo $output->footer();

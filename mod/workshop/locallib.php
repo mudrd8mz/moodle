@@ -163,6 +163,9 @@ class workshop {
     /** @var int maximum size of one file attached to the overall feedback */
     public $overallfeedbackmaxbytes;
 
+    /** @var workshop_delegator */
+    public $delegate;
+
     /**
      * @var workshop_strategy grading strategy instance
      * Do not use directly, get the instance using {@link workshop::grading_strategy_instance()}
@@ -190,26 +193,33 @@ class workshop {
      * @param stdClass $context The context of the workshop instance
      */
     public function __construct(stdclass $dbrecord, $cm, $course, stdclass $context=null) {
+
         foreach ($dbrecord as $field => $value) {
             if (property_exists('workshop', $field)) {
                 $this->{$field} = $value;
             }
         }
+
         if (is_null($cm) || is_null($course)) {
             throw new coding_exception('Must specify $cm and $course');
         }
+
         $this->course = $course;
+
         if ($cm instanceof cm_info) {
             $this->cm = $cm;
         } else {
             $modinfo = get_fast_modinfo($course);
             $this->cm = $modinfo->get_cm($cm->id);
         }
+
         if (is_null($context)) {
             $this->context = context_module::instance($this->cm->id);
         } else {
             $this->context = $context;
         }
+
+        $this->initialize_delegator();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -2451,7 +2461,6 @@ class workshop {
         return $status;
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////
     // Internal methods (implementation details)                                  //
     ////////////////////////////////////////////////////////////////////////////////
@@ -2774,6 +2783,16 @@ class workshop {
 
         $DB->set_field('workshop', 'phase', self::PHASE_SETUP, array('id' => $this->id));
         $this->phase = self::PHASE_SETUP;
+    }
+
+    /**
+     * Initialize the workshop delegator to use in this instance
+     *
+     * This is called in the constructor and sets up the $workshop->delegate
+     * functionality.
+     */
+    protected function initialize_delegator() {
+        $this->delegate = new mod_workshop_delegator($this);
     }
 }
 

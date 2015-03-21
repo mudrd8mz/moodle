@@ -100,6 +100,8 @@ if ($eval) {
     redirect($PAGE->url);
 }
 
+$workshop->delegate->view_page_init($PAGE);
+
 $output = $PAGE->get_renderer('mod_workshop');
 $userplan = new workshop_user_plan($workshop, $USER->id);
 
@@ -107,6 +109,9 @@ $userplan = new workshop_user_plan($workshop, $USER->id);
 
 echo $output->header();
 echo $output->heading_with_help(format_string($workshop->name), 'userplan', 'workshop');
+
+$workshop->delegate->view_page_start();
+
 echo $output->render($userplan);
 
 switch ($workshop->phase) {
@@ -642,5 +647,7 @@ case workshop::PHASE_CLOSED:
     break;
 default:
 }
+
+$workshop->delegate->view_page_end();
 
 echo $output->footer();

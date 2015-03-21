@@ -1,6 +1,13 @@
 This files describes API changes in /mod/workshop - activity modules,
 information provided here is intended especially for developers.
 
+=== 2.9 ===
+
+* Introduced support for delegated method calls. In places like `$workshop->delegate->method_name()`, subplugins
+  have a chance to intercept the normal code flow and amend the output and/or data processing. To do so, the
+  subplugin has to provide a dedicated class <subplugintype>_<subpluginname>_delegate (typically stored in its
+  classes/delegate.php file) with selected delegated methods implemented. See MDL-49619 for details.
+
 === 2.7 ===
 
 * The method workshop::log() has been deprecated in the workshop module. Please use the event classes instead

@@ -246,6 +246,8 @@ if ($edit) {
         $event->set_legacy_logdata($logdata);
         $event->trigger();
 
+        $workshop->delegate->submission_form_process($formdata);
+
         redirect($workshop->submission_url($formdata->id));
     }
 }
@@ -286,10 +288,14 @@ if ($edit) {
     $PAGE->navbar->add(get_string('submission', 'workshop'));
 }
 
+$workshop->delegate->submission_page_init($PAGE, $submission);
+
 // Output starts here
 $output = $PAGE->get_renderer('mod_workshop');
 echo $output->header();
 echo $output->heading(format_string($workshop->name), 2);
+
+$workshop->delegate->submission_page_start($submission);
 
 // show instructions for submitting as thay may contain some list of questions and we need to know them
 // while reading the submitted answer
@@ -374,6 +380,8 @@ if ($isreviewer) {
         $assessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'workshop'));
     }
 
+    $workshop->delegate->submission_prepare_assessment($submission, $assessment);
+
     echo $output->render($assessment);
 
     if ($workshop->phase == workshop::PHASE_CLOSED) {
@@ -408,6 +416,9 @@ if (has_capability('mod/workshop:viewallassessments', $workshop->context) or ($o
         if ($canoverride) {
             $displayassessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'workshop'));
         }
+
+        $workshop->delegate->submission_prepare_assessment($submission, $displayassessment);
+
         echo $output->render($displayassessment);
 
         if ($workshop->phase == workshop::PHASE_CLOSED and has_capability('mod/workshop:viewallassessments', $workshop->context)) {
@@ -422,5 +433,7 @@ if (!$edit and $canoverride) {
     // display a form to override the submission grade
     $feedbackform->display();
 }
+
+$workshop->delegate->submission_page_end($submission);
 
 echo $output->footer();

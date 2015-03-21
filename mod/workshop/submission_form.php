@@ -64,6 +64,8 @@ class workshop_submission_form extends moodleform {
         $mform->addElement('hidden', 'example', 0);
         $mform->setType('example', PARAM_INT);
 
+        $workshop->delegate->submission_form_definition($this, $mform, $this->_customdata);
+
         $this->add_action_buttons();
 
         $this->set_data($current);
@@ -87,6 +89,10 @@ class workshop_submission_form extends moodleform {
                 $errors['title'] = get_string('err_multiplesubmissions', 'mod_workshop');
             }
         }
+
+        $handler = (object)array('errors' => array());
+        $this->_customdata['workshop']->delegate->submission_form_validation($handler, $data, $files);
+        $errors += $handler->errors;
 
         return $errors;
     }
