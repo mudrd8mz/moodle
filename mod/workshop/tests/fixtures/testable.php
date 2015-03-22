@@ -38,4 +38,130 @@ class testable_workshop extends workshop {
         parent::aggregate_grading_grades_process($assessments, $timegraded);
     }
 
+    /**
+     * Overrides the parent method to use the testable delegator instead of the default one.
+     */
+    protected function initialize_delegator() {
+        $this->delegate = new testable_mod_workshop_delegator($this);
+    }
+}
+
+
+/**
+ * Testable subclass of the default workshop delegator.
+ *
+ * Instead of actually searching for workshop subplugins to see if they want to
+ * act as delegates, this testable delegator registeres two testable delegate
+ * classes to perform tests on.
+ *
+ * Additionally, it defines four dummy delegatable methods 'something',
+ * 'somewhere', 'somehow' and 'sometimes' that are used in the tests.
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class testable_mod_workshop_delegator extends mod_workshop_delegator {
+
+    /**
+     * Delegatable method with two parameters.
+     *
+     * @param stdClass $param1
+     * @param int $param2
+     */
+    public function something($param1, $param2) {
+        $this->delegate('something', array($param1, $param2));
+    }
+
+    /**
+     * Delegatable method with single parameter.
+     *
+     * @param stdClass $param
+     */
+    public function somewhere($param) {
+        $this->delegate('somewhere', array($param));
+    }
+
+    /**
+     * Delegatable method with single parameter.
+     *
+     * @param stdClass $param
+     */
+    public function somehow($param) {
+        $this->delegate('somehow', array($param));
+    }
+
+    /**
+     * Delegatable method with no parameter.
+     */
+    public function sometimes() {
+        $this->delegate('sometimes');
+    }
+
+    /**
+     * Overrides the parent method to use fake delegates.
+     */
+    protected function register_delegates() {
+        $this->delegates = array(
+            new testable_workshopsubplugin_delegate_foo($this->workshop),
+            new testable_workshopsubplugin_delegate_bar($this->workshop),
+        );
+    }
+}
+
+
+/**
+ * Fake delegate used in the tests.
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class testable_workshopsubplugin_delegate_foo extends mod_workshop_delegate {
+
+    /**
+     * Records that we were called.
+     *
+     * @param stdClass $param
+     */
+    public function somehow($param) {
+        $param->results[] = 'foo';
+    }
+
+    /**
+     * Records that we were called and that we had access to our workshop and the second parameter.
+     *
+     * @param stdClass $param1
+     * @param int $param2
+     */
+    public function something($param1, $param2) {
+        $param1->workshopname = $this->workshop->name;
+        $param1->crosscheck = $param2;
+        $param1->results[] = 'foo';
+    }
+}
+
+/**
+ * Fake delegate used in the tests.
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class testable_workshopsubplugin_delegate_bar extends mod_workshop_delegate {
+
+    /**
+     * Records that we were called.
+     *
+     * @param stdClass $param
+     */
+    public function somewhere($param) {
+        $param->results[] = 'bar';
+    }
+
+    /**
+     * Records that we were called.
+     *
+     * @param stdClass $param
+     */
+    public function somehow($param) {
+        $param->results[] = 'bar';
+    }
 }
