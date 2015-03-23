@@ -1582,11 +1582,19 @@ function workshop_extend_navigation(navigation_node $navref, stdclass $course, s
         $mysubmission = $navref->add(get_string('mysubmission', 'workshop'), $url);
         $mysubmission->mainnavonly = true;
     }
+
+    // Give our subplugins a chance to extend the navigation, too.
+    foreach (array_keys(core_component::get_subplugins('mod_workshop')) as $subplugintype) {
+        $subplugins = get_plugin_list_with_function($subplugintype, 'extend_navigation');
+        foreach ($subplugins as $subpluginfunction) {
+            $subpluginfunction($navref, $course, $module, $cm);
+        }
+    }
 }
 
 /**
  * Extends the settings navigation with the Workshop settings
-
+ *
  * This function is called when the context for the page is a workshop module. This is not called by AJAX
  * so it is safe to rely on the $PAGE.
  *
@@ -1596,15 +1604,24 @@ function workshop_extend_navigation(navigation_node $navref, stdclass $course, s
 function workshop_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $workshopnode=null) {
     global $PAGE;
 
-    //$workshopobject = $DB->get_record("workshop", array("id" => $PAGE->cm->instance));
+    if ($workshopnode !== null) {
+        if (has_capability('mod/workshop:editdimensions', $PAGE->cm->context)) {
+            $url = new moodle_url('/mod/workshop/editform.php', array('cmid' => $PAGE->cm->id));
+            $workshopnode->add(get_string('editassessmentform', 'workshop'), $url, settings_navigation::TYPE_SETTING);
+        }
 
-    if (has_capability('mod/workshop:editdimensions', $PAGE->cm->context)) {
-        $url = new moodle_url('/mod/workshop/editform.php', array('cmid' => $PAGE->cm->id));
-        $workshopnode->add(get_string('editassessmentform', 'workshop'), $url, settings_navigation::TYPE_SETTING);
-    }
-    if (has_capability('mod/workshop:allocate', $PAGE->cm->context)) {
-        $url = new moodle_url('/mod/workshop/allocation.php', array('cmid' => $PAGE->cm->id));
-        $workshopnode->add(get_string('allocate', 'workshop'), $url, settings_navigation::TYPE_SETTING);
+        if (has_capability('mod/workshop:allocate', $PAGE->cm->context)) {
+            $url = new moodle_url('/mod/workshop/allocation.php', array('cmid' => $PAGE->cm->id));
+            $workshopnode->add(get_string('allocate', 'workshop'), $url, settings_navigation::TYPE_SETTING);
+        }
+
+        // Give our subplugins a chance to extend the settings, too.
+        foreach (array_keys(core_component::get_subplugins('mod_workshop')) as $subplugintype) {
+            $subplugins = get_plugin_list_with_function($subplugintype, 'extend_settings_navigation');
+            foreach ($subplugins as $subpluginfunction) {
+                $subpluginfunction($settingsnav, $workshopnode);
+            }
+        }
     }
 }
 
