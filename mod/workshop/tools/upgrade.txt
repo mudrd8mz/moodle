@@ -1,0 +1,5 @@
+This files describes API changes in workshop subplugins of type 'workshoptool'.
+
+=== 2.9 ===
+
+* Introducing this subplugin type.

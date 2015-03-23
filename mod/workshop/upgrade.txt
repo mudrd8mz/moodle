@@ -7,6 +7,9 @@ information provided here is intended especially for developers.
   have a chance to intercept the normal code flow and amend the output and/or data processing. To do so, the
   subplugin has to provide a dedicated class <subplugintype>_<subpluginname>_delegate (typically stored in its
   classes/delegate.php file) with selected delegated methods implemented. See MDL-49619 for details.
+* There is a new workshop subplugin type `workshoptool` supported. It is supposed to be used for subplugins
+  that want to extend the workshop functionality (e.g. via delegated method calls) yet they are neither
+  grading strategies nor evaluators or allocators.
 
 === 2.7 ===
 

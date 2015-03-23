@@ -65,6 +65,9 @@ class backup_workshop_activity_structure_step extends backup_activity_structure_
         // grading evaluations data
         $this->add_subplugin_structure('workshopeval', $workshop, true);
 
+        // Let the workshop tools attach their data to the root element.
+        $this->add_subplugin_structure('workshoptool', $workshop, true);
+
         // example submissions
         $examplesubmissions = new backup_nested_element('examplesubmissions');
         $examplesubmission  = new backup_nested_element('examplesubmission', array('id'), array(
@@ -102,6 +105,9 @@ class backup_workshop_activity_structure_step extends backup_activity_structure_
             'gradeover', 'gradeoverby', 'feedbackauthor',
             'feedbackauthorformat', 'timegraded', 'published', 'late'));
 
+        // Let the workshop tools attach their data to the submission element.
+        $this->add_subplugin_structure('workshoptool', $submission, true);
+
         // allocated assessments
         $assessments = new backup_nested_element('assessments');
         $assessment  = new backup_nested_element('assessment', array('id'), array(
@@ -112,6 +118,9 @@ class backup_workshop_activity_structure_step extends backup_activity_structure_
 
         // dimension grades for the assessment (that is assessment forms are filled)
         $this->add_subplugin_structure('workshopform', $assessment, true);
+
+        // Let the workshop tools attach their data to the assessment element.
+        $this->add_subplugin_structure('workshoptool', $assessment, true);
 
         // aggregations of grading grades in this workshop
         $aggregations = new backup_nested_element('aggregations');

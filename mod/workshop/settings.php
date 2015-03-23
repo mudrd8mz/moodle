@@ -59,34 +59,13 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('workshop/examplesmode', get_string('examplesmode', 'workshop'),
                         get_string('configexamplesmode', 'workshop'), workshop::EXAMPLES_VOLUNTARY, $options));
 
-    // include the settings of allocation subplugins
-    $allocators = core_component::get_plugin_list('workshopallocation');
-    foreach ($allocators as $allocator => $path) {
-        if (file_exists($settingsfile = $path . '/settings.php')) {
-            $settings->add(new admin_setting_heading('workshopallocationsetting'.$allocator,
-                    get_string('allocation', 'workshop') . ' - ' . get_string('pluginname', 'workshopallocation_' . $allocator), ''));
+    // Let workshop subplugins to provide their settings.php file, too.
+    foreach (core_component::get_subplugins('mod_workshop') as $subplugintype => $unused) {
+        foreach (core_component::get_plugin_list_with_file($subplugintype, 'settings.php', false) as $subplugin => $settingsfile) {
+            $settings->add(new admin_setting_heading($subplugintype.'setting'.$subplugin,
+                get_string('subplugintype_'.$subplugintype, 'mod_workshop').': '.
+                get_string('pluginname', $subplugintype.'_'.$subplugin), ''));
             include($settingsfile);
         }
     }
-
-    // include the settings of grading strategy subplugins
-    $strategies = core_component::get_plugin_list('workshopform');
-    foreach ($strategies as $strategy => $path) {
-        if (file_exists($settingsfile = $path . '/settings.php')) {
-            $settings->add(new admin_setting_heading('workshopformsetting'.$strategy,
-                    get_string('strategy', 'workshop') . ' - ' . get_string('pluginname', 'workshopform_' . $strategy), ''));
-            include($settingsfile);
-        }
-    }
-
-    // include the settings of grading evaluation subplugins
-    $evaluations = core_component::get_plugin_list('workshopeval');
-    foreach ($evaluations as $evaluation => $path) {
-        if (file_exists($settingsfile = $path . '/settings.php')) {
-            $settings->add(new admin_setting_heading('workshopevalsetting'.$evaluation,
-                    get_string('evaluation', 'workshop') . ' - ' . get_string('pluginname', 'workshopeval_' . $evaluation), ''));
-            include($settingsfile);
-        }
-    }
-
 }

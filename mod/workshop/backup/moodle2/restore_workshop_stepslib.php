@@ -50,6 +50,9 @@ class restore_workshop_activity_structure_step extends restore_activity_structur
         // Apply for 'workshopeval' subplugins optional paths at workshop level
         $this->add_subplugin_structure('workshopeval', $workshop);
 
+        // Register optional paths to be handled by the workshoptool subplugins.
+        $this->add_subplugin_structure('workshoptool', $workshop);
+
         // example submissions
         $paths[] = new restore_path_element('workshop_examplesubmission',
                        '/activity/workshop/examplesubmissions/examplesubmission');
@@ -80,7 +83,11 @@ class restore_workshop_activity_structure_step extends restore_activity_structur
         $this->add_subplugin_structure('workshopform', $exampleassessment);
 
         // submissions
-        $paths[] = new restore_path_element('workshop_submission', '/activity/workshop/submissions/submission');
+        $submission = new restore_path_element('workshop_submission', '/activity/workshop/submissions/submission');
+        $paths[] = $submission;
+
+        // Register optional submission paths to be handled by the workshoptool subplugins.
+        $this->add_subplugin_structure('workshoptool', $submission);
 
         // allocated assessments
         $assessment = new restore_path_element('workshop_assessment',
@@ -89,6 +96,9 @@ class restore_workshop_activity_structure_step extends restore_activity_structur
 
         // Apply for 'workshopform' subplugins optional paths at assessment level
         $this->add_subplugin_structure('workshopform', $assessment);
+
+        // Register optional assessment paths to be handled by the workshoptool subplugins.
+        $this->add_subplugin_structure('workshoptool', $assessment);
 
         // aggregations of grading grades in this workshop
         $paths[] = new restore_path_element('workshop_aggregation', '/activity/workshop/aggregations/aggregation');

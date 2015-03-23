@@ -1161,7 +1161,9 @@ class core_plugin_manager {
 
             'workshopform' => array(
                 'accumulative', 'comments', 'numerrors', 'rubric'
-            )
+            ),
+
+            'workshoptool' => array(),
         );
 
         if (isset($standard_plugins[$type])) {

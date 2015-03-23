@@ -1615,6 +1615,9 @@ function workshop_extend_settings_navigation(settings_navigation $settingsnav, n
             $workshopnode->add(get_string('allocate', 'workshop'), $url, settings_navigation::TYPE_SETTING);
         }
 
+        $toolbox = $workshopnode->add(get_string('toolbox', 'workshop'), null, settings_navigation::TYPE_CONTAINER,
+            null, 'toolbox');
+
         // Give our subplugins a chance to extend the settings, too.
         foreach (array_keys(core_component::get_subplugins('mod_workshop')) as $subplugintype) {
             $subplugins = get_plugin_list_with_function($subplugintype, 'extend_settings_navigation');
@@ -1622,6 +1625,8 @@ function workshop_extend_settings_navigation(settings_navigation $settingsnav, n
                 $subpluginfunction($settingsnav, $workshopnode);
             }
         }
+
+        $toolbox->trim_if_empty();
     }
 }
 

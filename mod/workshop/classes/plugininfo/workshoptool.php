@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,18 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Workshop subplugin types declaration
- *
- * @package   mod_workshop
- * @copyright 2010 Petr Skoda (http://skodak.org)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_workshop
+ * @copyright   2015 David Mudrak <david@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace mod_workshop\plugininfo;
+
+use core\plugininfo\base;
 
 defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-                    'workshopform'       => 'mod/workshop/form',
-                    'workshopallocation' => 'mod/workshop/allocation',
-                    'workshopeval'       => 'mod/workshop/eval',
-                    'workshoptool'       => 'mod/workshop/tools',
-                    );
+/**
+ * Provides information about the workshoptool subplugin type.
+ */
+class workshoptool extends base {
+
+    /**
+     * Can the subplugin be uninstalled?
+     *
+     * @return bool
+     */
+    public function is_uninstall_allowed() {
+
+        if ($this->is_standard()) {
+            return false;
+        }
+
+        return true;
+    }
+}
