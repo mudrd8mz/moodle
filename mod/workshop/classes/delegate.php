@@ -32,8 +32,8 @@ defined('MOODLE_INTERNAL') || die();
  * affect various parts of the workshop interface and functionality by
  * implementing the corresponding delegated call.
  *
- * @copyright 2015 David Mudrak <david@moodle.com> @license
- * http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_workshop_delegate {
 

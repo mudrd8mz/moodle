@@ -19,7 +19,7 @@
  *
  * @package     mod_workshop
  * @subpackage  delegation
- * @category    phpunit
+ * @category    test
  * @copyright   2015 David Mudrak <david@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,10 +33,13 @@ require_once(__DIR__ . '/fixtures/testable.php');
 
 /**
  * Test cases for the workshop delegation functionality
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_workshop_delegation_testcase extends advanced_testcase {
 
-    /** workshop instance emulation */
+    /** @var workshop instance emulation */
     protected $workshop;
 
     /** setup testing environment */

@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines the mod_workshop\plugininfo::workshoptool class
+ *
  * @package     mod_workshop
  * @copyright   2015 David Mudrak <david@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -28,6 +30,9 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Provides information about the workshoptool subplugin type.
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class workshoptool extends base {
 
