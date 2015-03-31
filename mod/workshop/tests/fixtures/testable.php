@@ -110,12 +110,53 @@ class testable_mod_workshop_delegator extends mod_workshop_delegator {
 
 
 /**
+ * Base class for testable fake delegates used in this test.
+ *
+ * @copyright 2015 David Mudrak <david@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class testable_mod_workshop_delegate extends mod_workshop_delegate {
+
+    /**
+     * Example delegable method.
+     *
+     * @param stdClass $param1
+     * @param int $param2
+     */
+    public function something($param1, $param2) {
+    }
+
+    /**
+     * Example delegable method.
+     *
+     * @param stdClass $param
+     */
+    public function somewhere($param) {
+    }
+
+    /**
+     * Example delegable method.
+     *
+     * @param stdClass $param
+     */
+    public function somehow($param) {
+    }
+
+    /**
+     * Example delegable method.
+     */
+    public function sometimes() {
+    }
+}
+
+
+/**
  * Fake delegate used in the tests.
  *
  * @copyright 2015 David Mudrak <david@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class testable_workshopsubplugin_delegate_foo extends mod_workshop_delegate {
+class testable_workshopsubplugin_delegate_foo extends testable_mod_workshop_delegate {
 
     /**
      * Records that we were called.
@@ -145,7 +186,7 @@ class testable_workshopsubplugin_delegate_foo extends mod_workshop_delegate {
  * @copyright 2015 David Mudrak <david@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class testable_workshopsubplugin_delegate_bar extends mod_workshop_delegate {
+class testable_workshopsubplugin_delegate_bar extends testable_mod_workshop_delegate {
 
     /**
      * Records that we were called.

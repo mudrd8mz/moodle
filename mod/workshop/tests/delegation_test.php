@@ -65,14 +65,10 @@ class mod_workshop_delegation_testcase extends advanced_testcase {
 
         // The method 'sometimes' is not implemented by any subplugin.
         // Nothing happens - just make sure the test goes on.
-        $this->assertFalse(method_exists('testable_workshopsubplugin_delegate_foo', 'sometimes'));
-        $this->assertFalse(method_exists('testable_workshopsubplugin_delegate_bar', 'sometimes'));
         $this->workshop->delegate->sometimes();
 
         // The method 'somewhere' is implemented by one subplugin.
         // Make sure it is delegated to it.
-        $this->assertFalse(method_exists('testable_workshopsubplugin_delegate_foo', 'somewhere'));
-        $this->assertTrue(method_exists('testable_workshopsubplugin_delegate_bar', 'somewhere'));
         $a = (object)array('results' => array());
         $this->workshop->delegate->somewhere($a);
         $this->assertEquals(1, count($a->results));
@@ -80,8 +76,6 @@ class mod_workshop_delegation_testcase extends advanced_testcase {
 
         // The method 'somehow' is implemented by two subplugins.
         // Make sure it is delegated to both.
-        $this->assertTrue(method_exists('testable_workshopsubplugin_delegate_foo', 'somehow'));
-        $this->assertTrue(method_exists('testable_workshopsubplugin_delegate_bar', 'somehow'));
         $b = (object)array('results' => array());
         $this->workshop->delegate->somehow($b);
         $this->assertEquals(2, count($b->results));

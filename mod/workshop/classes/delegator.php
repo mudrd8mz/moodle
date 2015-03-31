@@ -44,6 +44,62 @@ class mod_workshop_delegator {
     protected $delegates = null;
 
     /**
+     * Instantiate the delegator
+     *
+     * This is supposed to be use from the {@link workshop} class constructor
+     * only.
+     *
+     * @param workshop $workshop the workshop instance to attach to
+     */
+    public function __construct(workshop $workshop) {
+        $this->workshop = $workshop;
+    }
+
+    /**
+     * Delegates (dispatches) the given method to registered subplugins
+     *
+     * @param string $methodname the called method name
+     * @param array $params optional parameters to be passed
+     */
+    protected function delegate($methodname, array $params = array()) {
+
+        if ($this->delegates === null) {
+            $this->register_delegates();
+        }
+
+        foreach ($this->delegates as $delegate) {
+            call_user_func_array(array($delegate, $methodname), $params);
+        }
+    }
+
+    /**
+     * Register all delegates provided by workshop subplugins
+     *
+     * To implement the workshop delegation feature, the subplugin has to
+     * define class <workshopsubtype>_<subname>_delegate, typically in a file
+     * classes/delegate.php. Additionally, this class has to be a subclass of
+     * the {@link mod_workshop_delegate} class.
+     */
+    protected function register_delegates() {
+
+        $this->delegates = array();
+
+        foreach (core_component::get_subplugins('mod_workshop') as $subplugintype => $unused) {
+            $candidates = core_component::get_plugin_list_with_class($subplugintype, 'delegate');
+
+            foreach ($candidates as $subplugin => $class) {
+                $parents = class_parents($class);
+
+                if (isset($parents['mod_workshop_delegate'])) {
+                    $this->delegates[] = new $class($this->workshop);
+                } else {
+                    debugging('The class '.$class.' is supposed to be a subclass of the mod_workshop_delegate', DEBUG_DEVELOPER);
+                }
+            }
+        }
+    }
+
+    /**
      * Called at view.php right before the output starts
      *
      * @param moodle_page $page the current page
@@ -169,61 +225,4 @@ class mod_workshop_delegator {
         $this->delegate('assessment_page_end', array($assessment, $submission));
     }
 
-    /**
-     * Instantiate the delegator
-     *
-     * This is supposed to be use from the {@link workshop} class constructor
-     * only.
-     *
-     * @param workshop $workshop the workshop instance to attach to
-     */
-    public function __construct(workshop $workshop) {
-        $this->workshop = $workshop;
-    }
-
-    /**
-     * Register all delegates provided by workshop subplugins
-     *
-     * To implement the workshop delegation feature, the subplugin has to
-     * define class <workshopsubtype>_<subname>_delegate, typically in a file
-     * classes/delegate.php. Additionally, this class has to be a subclass of
-     * the {@link mod_workshop_delegate} class.
-     */
-    protected function register_delegates() {
-
-        $this->delegates = array();
-
-        foreach (core_component::get_subplugins('mod_workshop') as $subplugintype => $unused) {
-            $candidates = core_component::get_plugin_list_with_class($subplugintype, 'delegate');
-
-            foreach ($candidates as $subplugin => $class) {
-                $parents = class_parents($class);
-
-                if (isset($parents['mod_workshop_delegate'])) {
-                    $this->delegates[] = new $class($this->workshop);
-                } else {
-                    debugging('The class '.$class.' is supposed to be a subclass of the mod_workshop_delegate', DEBUG_DEVELOPER);
-                }
-            }
-        }
-    }
-
-    /**
-     * Delegates (dispatches) the given method to registered subplugins
-     *
-     * @param string $methodname the called method name
-     * @param array $params optional parameters to be passed
-     */
-    protected function delegate($methodname, array $params = array()) {
-
-        if ($this->delegates === null) {
-            $this->register_delegates();
-        }
-
-        foreach ($this->delegates as $delegate) {
-            if (method_exists($delegate, $methodname)) {
-                call_user_func_array(array($delegate, $methodname), $params);
-            }
-        }
-    }
 }

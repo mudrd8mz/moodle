@@ -42,11 +42,6 @@ class workshoptool extends base {
      * @return bool
      */
     public function is_uninstall_allowed() {
-
-        if ($this->is_standard()) {
-            return false;
-        }
-
         return true;
     }
 }
