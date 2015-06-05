@@ -74,7 +74,10 @@ class block_site_main_menu extends block_list {
                         $attrs['class'] = $cm->extraclasses . ' activity-action';
                         if ($cm->onclick) {
                             $attrs['id'] = html_writer::random_id('onclick');
-                            $OUTPUT->add_action_handler(new component_action('click', $cm->onclick), $attrs['id']);
+                            $OUTPUT->add_action_handler(
+                                new component_action('click', 'function () {'.$cm->onclick.'}'),
+                                $attrs['id']
+                            );
                         }
                         if (!$cm->visible) {
                             $attrs['class'] .= ' dimmed';
@@ -162,7 +165,10 @@ class block_site_main_menu extends block_list {
                         $attrs['class'] = $mod->extraclasses . ' activity-action';
                         if ($mod->onclick) {
                             $attrs['id'] = html_writer::random_id('onclick');
-                            $OUTPUT->add_action_handler(new component_action('click', $mod->onclick), $attrs['id']);
+                            $OUTPUT->add_action_handler(
+                                new component_action('click', 'function () {'.$mod->onclick.'}'),
+                                $attrs['id']
+                            );
                         }
                         if (!$mod->visible) {
                             $attrs['class'] .= ' dimmed';
