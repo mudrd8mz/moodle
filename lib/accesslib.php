@@ -4110,8 +4110,7 @@ function sort_by_roleassignment_authority($users, context $context, $roles = arr
  * system is more flexible. If you really need, you can to use this
  * function but consider has_capability() as a possible substitute.
  *
- * The caller function is responsible for including all the
- * $sort fields in $fields param.
+ * All $sort fields are added into $fields if not present there yet.
  *
  * If $roleid is an array or is empty (all roles) you need to set $fields
  * (and $sort by extension) params according to it, as the first field
@@ -4208,6 +4207,16 @@ function get_role_users($roleid, context $context, $parent = false, $fields = ''
         list($sort, $sortparams) = users_order_by_sql('u');
         $params = array_merge($params, $sortparams);
     }
+
+    // Adding the fields from $sort that are not present in $fields.
+    $sortarray = preg_split('/,\s*/', $sort);
+    $fieldsarray = preg_split('/,\s*/', $fields);
+    foreach ($sortarray as $sortfield) {
+        if (!in_array($sortfield, $fieldsarray)) {
+            $fieldsarray[] = $sortfield;
+        }
+    }
+    $fields = implode(', ', $fieldsarray);
 
     if ($all === null) {
         // Previously null was used to indicate that parameter was not used.
