@@ -226,7 +226,8 @@ function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $ht
                                                 'challenge' => $challenge,
                                                 'response' => $response
                                                 ),
-                                         $https        
+                                         null,
+                                         $https
                                         );
 
         $answers = explode ("\n", $response [1]);
