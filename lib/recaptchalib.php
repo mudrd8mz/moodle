@@ -67,10 +67,11 @@ function _recaptcha_qsencode ($data) {
  * @param string $host
  * @param string $path
  * @param array $data
- * @param int port
+ * @param int $ignored used to be port but it has been ignored since long ago
+ * @param bool $https should we use https when posting the data
  * @return array response
  */
-function _recaptcha_http_post($host, $path, $data, $port = 80, $https=false) {
+function _recaptcha_http_post($host, $path, $data, $ignored = null, $https = false) {
         global $CFG;
         $protocol = 'http';
         if ($https) {
