@@ -3368,3 +3368,58 @@ function core_calendar_user_preferences() {
         'choices' => array(0, 1));
     return $preferences;
 }
+
+/**
+ * Internal helper function for exporting all day event's start and end dates.
+ *
+ * When exporting a calendar into iCalendar format, events with no duration are
+ * interpreted as all day events. To set the correct date for such an event, we
+ * need to look back and guess what actual date the user had seen in the date/time
+ * picker while creating the event.
+ *
+ * We do that by looking at the event author's timezone and extracting the user
+ * date from the UTC timestamp. As the function is typically called in a loop
+ * over multiple events, a simple ad-hoc cache is used to avoid unnecessary
+ * database hits.
+ *
+ * As any other attempt to interpret existing timestamps based on the current
+ * user settings, this may not be always accurate. This function may return
+ * incorrect values if the event author's timezone has changed, or the server's
+ * default timezone has changed. This is seen as lesser evil when compared to
+ * using the raw UTC timestamp for extracting the date part (unfortunately
+ * Moodle does not keep the original timezone of the timestamp).
+ *
+ * This is supposed to be used internally by calendar export code only.
+ *
+ * @param stdClass $event Event data object with the properties timestart and userid
+ * @return array Event date boundaries formatted as YYYYMMDD
+ */
+function calendar_export_all_day_event_boundaries($event) {
+
+    $cacheusertimezones = cache::make_from_params(cache_store::MODE_REQUEST, 'core_calendar', 'usertimezones');
+
+    if ($event->userid) {
+        // Get the event author's timezone.
+        $timezone = $cacheusertimezones->get($event->userid);
+        if ($timezone === false) {
+            $user = core_user::get_user($event->userid, 'id,timezone');
+            $timezone = $user->timezone;
+            $cacheusertimezones->set($event->userid, $timezone);
+        }
+
+    } else {
+        // We have no other option but using the server default timezone.
+        $timezone = core_date::get_server_timezone();
+    }
+
+    // Get the date that the user would see if editing this event's timestart.
+    $userstart = usergetdate($event->timestart, $timezone);
+    $userend = usergetdate($event->timestart + DAYSECS, $timezone);
+
+    // Format the date for the iCalendar export purposes.
+    $dtstart = sprintf('%04d%02d%02d', $userstart['year'], $userstart['mon'], $userstart['mday']);
+    $dtend = sprintf('%04d%02d%02d', $userend['year'], $userend['mon'], $userend['mday']);
+
+    // Return the tuple of dtstart and dtend.
+    return [$dtstart, $dtend];
+}

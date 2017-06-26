@@ -171,4 +171,49 @@ class core_calendar_lib_testcase extends advanced_testcase {
         $event = reset($events);
         $this->assertEquals('assign', $event->modulename);
     }
+
+    /**
+     * Tests for the behaviour of {@link calendar_export_all_day_event_boundaries()}.
+     */
+    public function test_calendar_export_all_day_event_boundaries() {
+
+        // Prepare the test user.
+        $generator = $this->getDataGenerator();
+        $user = $generator->create_user(['timezone' => 'Australia/Perth']);
+
+        // Let the user create an event starting on 27 June 2017 at 6am her time (which is 26 June 22:00 UTC).
+        $event = (object)[
+            'timestart' => make_timestamp(2017, 6, 27, 6, 0, 0, $user->timezone),
+            'userid' => $user->id,
+        ];
+
+        // Get the start and end date to be exported to the iCal.
+        list($start, $end) = calendar_export_all_day_event_boundaries($event);
+
+        // Assert that the all day event starts on 27 June and ends on 28 June.
+        $this->assertEquals(20170627, $start);
+        $this->assertEquals(20170628, $end);
+
+        // Now let the user create an event starting on 27 June 2017 at 4:30pm her time (27 June 08:30 UTC).
+        $event = (object)[
+            'timestart' => make_timestamp(2017, 6, 27, 16, 30, 0, $user->timezone),
+            'userid' => $user->id,
+        ];
+
+        list($start, $end) = calendar_export_all_day_event_boundaries($event);
+        $this->assertEquals(20170627, $start);
+        $this->assertEquals(20170628, $end);
+
+        // Check that exporting of an event with no known author falls back to interpreting
+        // the timestamp according to the server default timezone.
+        $this->setTimezone('Europe/Prague');
+        $event = (object)[
+            'timestart' => make_timestamp(2016, 12, 31, 23, 30, 0, 'Etc/GMT'),
+            'userid' => 0,
+        ];
+
+        list($start, $end) = calendar_export_all_day_event_boundaries($event);
+        $this->assertEquals(20170101, $start);
+        $this->assertEquals(20170102, $end);
+    }
 }
