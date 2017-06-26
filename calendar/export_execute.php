@@ -218,8 +218,11 @@ foreach($events as $event) {
         $ev->add_property('dtend', Bennu::timestamp_to_datetime($event->timestart + $event->timeduration));
     } else {
         // When no duration is present, ie an all day event, VALUE should be date instead of time and dtend = dtstart + 1 day.
-        $ev->add_property('dtstart', Bennu::timestamp_to_date($event->timestart), array('value' => 'DATE')); // All day event.
-        $ev->add_property('dtend', Bennu::timestamp_to_date($event->timestart + DAYSECS), array('value' => 'DATE')); // All day event.
+        // But we need to look back at what date the user actually had seen in the date picker element before extracting
+        // it from the UTC timestamp.
+        list($eventdtstart, $eventdtend) = calendar_export_all_day_event_boundaries($event);
+        $ev->add_property('dtstart', $eventdtstart, array('value' => 'DATE'));
+        $ev->add_property('dtend', $eventdtend, array('value' => 'DATE'));
     }
     if ($event->courseid != 0) {
         $coursecontext = context_course::instance($event->courseid);
