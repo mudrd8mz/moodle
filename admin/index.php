@@ -538,6 +538,10 @@ if (!$cache and $branch <> $CFG->branch) {  // Update the branch
 
 if (!$cache and moodle_needs_upgrading()) {
 
+    if (!defined('MOODLE_NEEDS_UPGRADING')) {
+        define('MOODLE_NEEDS_UPGRADING', 1);
+    }
+
     $PAGE->set_url(new moodle_url($PAGE->url, array('confirmplugincheck' => $confirmplugins)));
 
     check_upgrade_key($upgradekeyhash);
