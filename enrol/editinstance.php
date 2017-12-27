@@ -38,7 +38,7 @@ if (!$plugin) {
 }
 
 require_login($course);
-require_capability('enrol/' . $type . ':config', $context);
+require_capability('moodle/course:enrolconfig', $context);
 
 $PAGE->set_url('/enrol/editinstance.php', array('courseid' => $course->id, 'id' => $instanceid, 'type' => $type));
 $PAGE->set_pagelayout('admin');
@@ -56,7 +56,6 @@ if ($instanceid) {
     $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => $type, 'id' => $instanceid), '*', MUST_EXIST);
 
 } else {
-    require_capability('moodle/course:enrolconfig', $context);
     // No instance yet, we have to add new instance.
     navigation_node::override_active_url(new moodle_url('/enrol/instances.php', array('id' => $course->id)));
 
@@ -64,6 +63,12 @@ if ($instanceid) {
     $instance->id       = null;
     $instance->courseid = $course->id;
     $instance->status   = ENROL_INSTANCE_ENABLED; // Do not use default for automatically created instances here.
+}
+
+// Check if user can edit/add this enrol instance.
+if ((!$instanceid && !$plugin->can_add_instance($instance)) ||
+    ($instanceid && !$plugin->can_edit_instance($instance))) {
+    redirect($return);
 }
 
 $mform = new enrol_instance_edit_form(null, array($instance, $plugin, $context, $type, $return));

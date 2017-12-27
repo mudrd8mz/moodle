@@ -259,8 +259,8 @@ foreach ($instances as $instance) {
         }
     }
 
-    // link to instance management
-    if (enrol_is_enabled($instance->enrol) && $canconfig) {
+    // Link to instance management.
+    if (enrol_is_enabled($instance->enrol) && $canconfig && $plugin->can_edit_instance($instance)) {
         if ($icons = $plugin->get_action_icons($instance)) {
             $edit = array_merge($edit, $icons);
         }
