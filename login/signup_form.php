@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -170,13 +169,12 @@ class login_signup_form extends moodleform {
             $errors['password'] = $errmsg;
         }
 
-        if ($this->signup_captcha_enabled()) {
-            $recaptcha_element = $this->_form->getElement('recaptcha_element');
-            if (!empty($this->_form->_submitValues['recaptcha_challenge_field'])) {
-                $challenge_field = $this->_form->_submitValues['recaptcha_challenge_field'];
-                $response_field = $this->_form->_submitValues['recaptcha_response_field'];
-                if (true !== ($result = $recaptcha_element->verify($challenge_field, $response_field))) {
-                    $errors['recaptcha'] = $result;
+        if (signup_captcha_enabled()) {
+            $recaptchaelement = $this->_form->getElement('recaptcha_element');
+            if (!empty($this->_form->_submitValues['g-recaptcha-response'])) {
+                $response = $this->_form->_submitValues['g-recaptcha-response'];
+                if (!$recaptchaelement->verify($response)) {
+                    $errors['recaptcha_element'] = get_string('incorrectpleasetryagain', 'auth');
                 }
             } else {
                 $errors['recaptcha'] = get_string('missingrecaptchachallengefield');
@@ -188,7 +186,6 @@ class login_signup_form extends moodleform {
         $errors += profile_validation($dataobject, $files);
 
         return $errors;
-
     }
 
     /**
