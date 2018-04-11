@@ -36,7 +36,7 @@ use \core_privacy\local\request\moodle_content_writer;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class moodle_content_writer_test extends advanced_testcase {
+class core_privacy_moodle_content_writer_testcase extends advanced_testcase {
 
     /**
      * Test that exported data is saved correctly within the system context.

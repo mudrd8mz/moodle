@@ -37,7 +37,7 @@ use \core_privacy\local\request\approved_contextlist;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class contextlist_collection_test extends advanced_testcase {
+class core_privacy_contextlist_collection_testcase extends advanced_testcase {
     /**
      * A contextlist_collection should support the contextlist type.
      */

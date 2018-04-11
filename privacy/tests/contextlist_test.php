@@ -35,7 +35,7 @@ use \core_privacy\local\request\contextlist;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class contextlist_test extends advanced_testcase {
+class core_privacy_contextlist_testcase extends advanced_testcase {
 
     /**
      * Ensure that valid SQL results in the relevant contexts being added.

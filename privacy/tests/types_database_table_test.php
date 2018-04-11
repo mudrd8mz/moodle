@@ -35,7 +35,7 @@ use \core_privacy\local\metadata\types\database_table;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_privacy_metadata_types_database_table extends advanced_testcase {
+class core_privacy_metadata_types_database_table_testcase extends advanced_testcase {
 
     /**
      * Ensure that warnings are thrown if string identifiers contain invalid characters.

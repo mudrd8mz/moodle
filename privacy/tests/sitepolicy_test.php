@@ -35,7 +35,7 @@ global $CFG;
  * @copyright   2018 Marina Glancy
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sitepolicy_test extends advanced_testcase {
+class core_privacy_sitepolicy_testcase extends advanced_testcase {
 
     /**
      * Tests for \core_privacy\local\sitepolicy\manager::is_defined()

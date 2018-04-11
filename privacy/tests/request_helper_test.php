@@ -36,7 +36,7 @@ use \core_privacy\local\request\writer;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class request_helper_test extends advanced_testcase {
+class core_privacy_request_helper_testcase extends advanced_testcase {
     /**
      * Test that basic module data is returned.
      */
