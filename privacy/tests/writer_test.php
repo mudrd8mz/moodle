@@ -39,7 +39,7 @@ use \core_privacy\local\request\writer;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class writer_test extends advanced_testcase {
+class core_privacy_writer_testcase extends advanced_testcase {
     /**
      * Test that calling with_context multiple times will return the same write instance.
      */

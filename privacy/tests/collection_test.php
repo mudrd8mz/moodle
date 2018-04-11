@@ -36,7 +36,7 @@ use \core_privacy\local\metadata\types;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_privacy_metadata_collection extends advanced_testcase {
+class core_privacy_metadata_collection_testcase extends advanced_testcase {
 
 
     /**

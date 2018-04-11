@@ -38,7 +38,7 @@ use \core_privacy\local\request\approved_contextlist;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_privacy_legacy_polyfill_test extends advanced_testcase {
+class core_privacy_legacy_polyfill_testcase extends advanced_testcase {
     /**
      * Test that the null_provider polyfill works and that the static _get_reason can be
      * successfully called.
