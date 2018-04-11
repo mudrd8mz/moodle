@@ -35,7 +35,7 @@ use \core_privacy\local\request\contextlist_base;
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class contextlist_base_test extends advanced_testcase {
+class core_privacy_contextlist_base_testcase extends advanced_testcase {
     /**
      * Ensure that get_contextids returns the list of unique contextids.
      *

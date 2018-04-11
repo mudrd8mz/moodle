@@ -37,7 +37,7 @@ use \core_privacy\local\request\writer;
  * @copyright   2018 Jake Dallimore <jrhdallimore@gmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class privacy_manager_testcase extends advanced_testcase {
+class core_privacy_manager_testcase extends advanced_testcase {
     /**
      * Test tearDown.
      */
