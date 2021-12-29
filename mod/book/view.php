@@ -158,11 +158,11 @@ if ($book->navstyle) {
         $navprev = get_string('navprev', 'book');
         if ($book->navstyle == 1) {
             $chnavigation .= '<a title="' . $navprevtitle . '" class="bookprev" href="view.php?id=' .
-                $cm->id . '&amp;chapterid=' . $previd .  '">' .
+                $cm->id . '&amp;chapterid=' . $previd .  '#mod_book-chaptersnavigation">' .
                 $OUTPUT->pix_icon($navprevicon, $navprevtitle, 'mod_book') . '</a>';
         } else {
             $chnavigation .= '<a title="' . $navprev . '" class="bookprev" href="view.php?id=' .
-                $cm->id . '&amp;chapterid=' . $previd . '">' .
+                $cm->id . '&amp;chapterid=' . $previd . '#mod_book-chaptersnavigation">' .
                 '<span class="chaptername"><span class="arrow">' . $OUTPUT->larrow() . '&nbsp;</span></span>' .
                 $navprev . ':&nbsp;<span class="chaptername">' . $prevtitle . '</span></a>';
         }
@@ -171,11 +171,11 @@ if ($book->navstyle) {
         $navnext = get_string('navnext', 'book');
         if ($book->navstyle == 1) {
             $chnavigation .= '<a title="' . $navnexttitle . '" class="booknext" href="view.php?id=' .
-                $cm->id . '&amp;chapterid='.$nextid.'">' .
+                $cm->id . '&amp;chapterid='.$nextid.'#mod_book-chaptersnavigation">' .
                 $OUTPUT->pix_icon($navnexticon, $navnexttitle, 'mod_book') . '</a>';
         } else {
             $chnavigation .= ' <a title="' . $navnext . '" class="booknext" href="view.php?id=' .
-                $cm->id . '&amp;chapterid='.$nextid.'">' .
+                $cm->id . '&amp;chapterid='.$nextid.'#mod_book-chaptersnavigation">' .
                 $navnext . ':<span class="chaptername">&nbsp;' . $nexttitle.
                 '<span class="arrow">&nbsp;' . $OUTPUT->rarrow() . '</span></span></a>';
         }
@@ -217,7 +217,8 @@ $navclasses = book_get_nav_classes();
 
 if ($book->navstyle) {
     // Upper navigation.
-    echo '<div class="navtop border-top py-3 clearfix ' . $navclasses[$book->navstyle] . '">' . $chnavigation . '</div>';
+    echo '<div id="mod_book-chaptersnavigation" class="navtop border-top py-3 clearfix ' .  $navclasses[$book->navstyle] . '">' .
+        $chnavigation . '</div>';
 }
 
 // The chapter itself.
