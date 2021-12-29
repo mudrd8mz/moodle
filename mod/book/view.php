@@ -139,7 +139,7 @@ book_view($book, $chapter, $islastchapter, $course, $cm, $context);
 
 echo $OUTPUT->header();
 
-echo $renderedmenu;
+echo html_writer::div($renderedmenu, '', ['id' => 'mod_book-chaptersnavigation']);
 
 // The chapter itself.
 $hidden = $chapter->hidden ? ' dimmed_text' : null;
