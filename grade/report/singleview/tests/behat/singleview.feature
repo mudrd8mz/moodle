@@ -86,7 +86,7 @@ Feature: We can use Single view
     Then I should see "Grades were set for 2 items"
     And the field "Grade for Ann, Jill, Grainne, Beauchamp" matches value "12.05"
     And the field "Exclude for Jane, Nina, Niamh, Cholmondely" matches value "1"
-    And I select "new grade item 1" from the "Select grade item..." singleselect
+    And I select "new grade item 1" from the "View a single grade item" singleselect
     And I set the field "Grade for Ann, Jill, Grainne, Beauchamp" to "Very good"
     And I press "Save"
     Then I should see "Grades were set for 1 items"
