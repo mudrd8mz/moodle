@@ -369,10 +369,12 @@ class validator {
         if (isset($info['plugin->requires'])) {
             $this->versionphp['requires'] = $info['plugin->requires'];
             if ($this->versionphp['requires'] > $this->assertions['moodleversion']) {
-                $this->add_message(self::ERROR, 'requiresmoodle', $this->versionphp['requires']);
+                $this->add_message(self::ERROR, 'requiresmoodle',
+                    $this->versionphp['requires'] . ' > ' . $this->assertions['moodleversion']);
                 return false;
             }
-            $this->add_message(self::INFO, 'requiresmoodle', $this->versionphp['requires']);
+            $this->add_message(self::INFO, 'requiresmoodle',
+                $this->versionphp['requires'] . ' <= ' . $this->assertions['moodleversion']);
         }
 
         if (!isset($info['plugin->component'])) {
