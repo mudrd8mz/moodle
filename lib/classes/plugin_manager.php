@@ -792,8 +792,8 @@ class core_plugin_manager {
      *  ->(string)availability
      *
      * @param \core\plugininfo\base $plugin the plugin we are checking
-     * @param null|string|int|double $moodleversion explicit moodle core version to check against, defaults to $CFG->version
-     * @param null|string|int $moodlebranch explicit moodle core branch to check against, defaults to $CFG->branch
+     * @param null|string|int|double $moodleversion explicit moodle core version to check against, defaults to one in version.php
+     * @param null|string|int $moodlebranch explicit moodle core branch to check against, defaults to the one in version.php
      * @return array of objects
      */
     public function resolve_requirements(\core\plugininfo\base $plugin, $moodleversion=null, $moodlebranch=null) {
@@ -805,11 +805,11 @@ class core_plugin_manager {
         }
 
         if ($moodleversion === null) {
-            $moodleversion = $CFG->version;
+            $moodleversion = $this->get_core_version_from_disk();
         }
 
         if ($moodlebranch === null) {
-            $moodlebranch = $CFG->branch;
+            $moodlebranch = $this->get_core_branch_from_disk();
         }
 
         $reqs = array();
@@ -1357,7 +1357,7 @@ class core_plugin_manager {
 
             $validator = \core\update\validator::instance($tmp, $zipcontents);
             $validator->assert_plugin_type($plugintype);
-            $validator->assert_moodle_version($CFG->version);
+            $validator->assert_moodle_version($this->get_core_version_from_disk());
             // TODO Check for missing dependencies during validation.
             $result = $validator->execute();
             if (!$silent) {
@@ -2431,5 +2431,47 @@ class core_plugin_manager {
         }
 
         return $this->updateapiclient;
+    }
+
+    /**
+     * Returns the Moodle core version number as defined in version.php
+     *
+     * This is normally obtained as $CFG->version but during the core upgrade, we need to use the value directly from
+     * the file and not the one stored in the config table.
+     *
+     * @return string
+     */
+    protected function get_core_version_from_disk(): string {
+        global $CFG;
+
+        $version = null;
+        require($CFG->dirroot . '/version.php');
+
+        if (empty($version)) {
+            throw new moodle_exception('err_empty_core_version', 'core_plugin');
+        }
+
+        return $version;
+    }
+
+    /**
+     * Returns the Moodle core branch number as defined in version.php
+     *
+     * This is normally obtained as $CFG->branch but during the core upgrade, we need to use the value directly from
+     * the file and not the one stored in the config table.
+     *
+     * @return string
+     */
+    protected function get_core_branch_from_disk(): string {
+        global $CFG;
+
+        $branch = null;
+        require($CFG->dirroot . '/version.php');
+
+        if (empty($branch)) {
+            throw new moodle_exception('err_empty_core_branch', 'core_plugin');
+        }
+
+        return $branch;
     }
 }
