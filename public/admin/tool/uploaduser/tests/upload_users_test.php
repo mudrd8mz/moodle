@@ -296,7 +296,7 @@ EOF;
 
         $user4 = $DB->get_record('user', ['username' => 'user4']);
         $this->assertEmpty($user4, 'User4 should not be created (duplicate CODE003 in CSV)');
-        $this->assertStringContainsString('This value has already been used in the uploaded users file.', $output);
+        $this->assertStringContainsString('This value has already been used in the upload users file.', $output);
         $this->assertStringContainsString('This value has already been used.', $output);
 
         // 3. Upload a new user with a value that already exists in the database — should be rejected.
