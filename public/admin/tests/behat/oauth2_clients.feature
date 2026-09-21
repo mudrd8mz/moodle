@@ -14,7 +14,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "1"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And the "Proof Key for Code Exchange" "checkbox" should be enabled
@@ -37,7 +37,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I should not see "Callback URIs"
     And "Proof Key for Code Exchange" "field" should not be visible
     When I press "Create client"
@@ -59,7 +59,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "1"
-    And I set the field "Client Credentials" to "0"
+    And I set the field "Client credentials" to "0"
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And the "Proof Key for Code Exchange" "checkbox" should be enabled
@@ -81,7 +81,7 @@ Feature: Create OAuth2 clients
     And I set the field "Name" to "Test Public Client"
     And I set the field "Description" to "A test public OAuth2 client"
     And I click on "Public" "radio"
-    And "Client Credentials" "field" should not be visible
+    And "Client credentials" "field" should not be visible
     And the "Authorization Code" "field" should be disabled
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
@@ -104,7 +104,7 @@ Feature: Create OAuth2 clients
     And I click on "Confidential" "radio"
     # Primary flow is not selected.
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "0"
+    And I set the field "Client credentials" to "0"
     When I press "Create client"
     Then I should see "You must supply a value here." in the "Name" "form_row"
     And I should see "You must select at least one primary flow." in the "Primary flows" "form_row"
@@ -112,7 +112,7 @@ Feature: Create OAuth2 clients
     And I set the field "Name" to "Test Client"
     And I set the field "Authorization Code" to "1"
     And I press "Create client"
-    And I should see "At least one valid Callback URI is required." in the "Callback URIs" "form_row"
+    And I should see "At least one valid callback URI is required." in the "Callback URIs" "form_row"
     # Invalid callback URI is provided.
     And I set the field "redirecturi[0]" to "invalid-uri"
     And I press "Create client"
@@ -128,7 +128,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I press "Create client"
     And "Test Confidential Client" "heading" should exist
     And "Secrets" "heading" should exist
@@ -155,7 +155,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I press "Create client"
     And I press "Generate secret"
     And I click on "Close" "button" in the "Secret generated" "dialogue"
@@ -175,7 +175,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I press "Create client"
     # Generate the first secret.
     And I press "Generate secret"
@@ -202,7 +202,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I press "Create client"
     And I click on "Go back to OAuth 2 clients" "link"
     And I click on "Edit" "link" in the "Test Confidential Client" "table_row"
@@ -216,7 +216,7 @@ Feature: Create OAuth2 clients
     And "#client-active-secrets" "css_element" should exist
     And I should see "Active" in the "#client-status" "css_element"
     And I should see "Confidential" in the "#client-type" "css_element"
-    And I should see "Client Credentials" in the "#client-flows" "css_element"
+    And I should see "Client credentials" in the "#client-flows" "css_element"
     And I should see "0" in the "#client-active-secrets" "css_element"
     And "Manage secrets" "link" should exist in the "#client-active-secrets" "css_element"
     And the following fields match these values:
@@ -225,7 +225,7 @@ Feature: Create OAuth2 clients
     And "Confidential" "radio" should not exist
     And "Public" "radio" should not exist
     And "Authorization Code" "field" should not exist
-    And "Client Credentials" "field" should not exist
+    And "Client credentials" "field" should not exist
     And "Callback URIs" "field" should not exist
     And "Proof Key for Code Exchange" "field" should not exist
     # Edit the client name and description.
@@ -249,7 +249,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "1"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And I press "Create client"
     And I click on "Go back to OAuth 2 clients" "link"
@@ -265,7 +265,7 @@ Feature: Create OAuth2 clients
     And I should see "Active" in the "#client-status" "css_element"
     And I should see "Confidential" in the "#client-type" "css_element"
     And I should see "Authorization Code" in the "#client-flows" "css_element"
-    And I should see "Client Credentials" in the "#client-flows" "css_element"
+    And I should see "Client credentials" in the "#client-flows" "css_element"
     And I should see "0" in the "#client-active-secrets" "css_element"
     And "Manage secrets" "link" should exist in the "#client-active-secrets" "css_element"
     And the following fields match these values:
@@ -276,7 +276,7 @@ Feature: Create OAuth2 clients
     And "Confidential" "radio" should not exist
     And "Public" "radio" should not exist
     And "Authorization Code" "field" should not exist
-    And "Client Credentials" "field" should not exist
+    And "Client credentials" "field" should not exist
     And "redirecturi[0]" "field" should exist
     And "Proof Key for Code Exchange" "field" should exist
     And the "Proof Key for Code Exchange" "field" should be enabled
@@ -326,7 +326,7 @@ Feature: Create OAuth2 clients
     And "Confidential" "radio" should not exist
     And "Public" "radio" should not exist
     And "Authorization Code" "field" should not exist
-    And "Client Credentials" "field" should not exist
+    And "Client credentials" "field" should not exist
     And "redirecturi[0]" "field" should exist
     And "Proof Key for Code Exchange" "field" should not exist
     # Edit the client name, description and redirect URIs.
@@ -356,7 +356,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "1"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And I press "Create client"
     # Generate a secret for the client.
@@ -399,7 +399,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test confidential OAuth2 client"
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "1"
-    And I set the field "Client Credentials" to "1"
+    And I set the field "Client credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And I press "Create client"
     # Generate a secret for the client.
